@@ -44,7 +44,11 @@ def parse_attr_value(xmlnode, attr_name, value_type):
         attr_type = value_type[0] if len(value_type) > 0 else str
         return [attr_type(elem) for elem in re.split(r'[, ]', attr_val)]
 
-    return value_type(attr_val)
+    try:
+        return value_type(attr_val)
+    except (ValueError, TypeError):
+        # Return the raw string value if conversion fails (e.g., 'main' for group attribute)
+        return attr_val
 
 
 def write_child_node(xmlnode, tag_name, node):
